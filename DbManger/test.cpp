@@ -73,6 +73,12 @@ int main()
 	//	cout << *i<<endl;
 	//}
 	//delete(rmg);
-	dbm->CloseDb();
+	//-------------------------------------test EventRelationManagement
+	EventRelationManagement  * erm = new EventRelationManagement();
+	erm->AddEventRelation("101","202",1);//添加事件之间的关联关系
+	bool b1 = erm->GetEventRelation("101","202");//查找事件之间的关联关系
+	erm->UpdateEventRelation("101","202",1);//更新事件之间的关联关系
+	erm->DeleteEventRelation("101","202");//删除事件之间的关联关系
+	delete(dbm);
 	getchar();
 }

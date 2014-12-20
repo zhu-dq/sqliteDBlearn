@@ -21,7 +21,7 @@ bool	EventRelationManagement::AddEventRelation(string strE1, string strE2, bool 
 {
 	//--------------------------------------------获取EA和EB之间数据个数---------------------------------------------------
 	int count = 0;
-	string sqlGetCount = "  select count(*) from noderelation where (IDA = \"" + strE2 + "\" and IDB =\" " + strE1 + "\") or (IDA = \"" + strE1 + "\" and IDB =\" " + strE2 + "\")";
+	string sqlGetCount = "  select count(*) from noderelation where (IDA = \'" + strE2 + "\' and IDB =\'" + strE1 + "\') or (IDA = \'" + strE1 + "\' and IDB =\'" + strE2 + "\')";
 	sqlite3_exec(pdb, sqlGetCount.c_str(), callbackGetERelationCount, &count, &errMsg);
 	//--------------------------------------------------------------------------------------------------------------------------
 	if (count != 0)
@@ -48,7 +48,7 @@ bool EventRelationManagement::GetEventRelation(string strE1, string strE2)
 {
 	string strbool;
 	//select RelationEAB from eventrelation where EVENTA = "leida1" and EVENTB = "leida2"
-	string sqlSelect = "select RelationEAB  from eventrelation  where (EVENTA  = \"" + strE2 + "\" and EVENTB  = \"" + strE1 + "\") or (EVENTA =\" " + strE1 + "\" and EVENTB =\" " + strE2 + "\")";
+	string sqlSelect = "select RelationEAB  from eventrelation  where (EVENTA  = \'" + strE2 + "\' and EVENTB  = \'" + strE1 + "\') or (EVENTA =\'" + strE1 + "\' and EVENTB =\'" + strE2 + "\')";
 	sqlite3_exec(pdb, sqlSelect.c_str(), callbackGetERelation, &strbool, &errMsg);
 	if (errMsg)
 	{
