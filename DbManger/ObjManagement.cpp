@@ -15,8 +15,7 @@ bool ObjManagement::AddJson(string JsonStr)
 	Json::Value json_object;
 	reader.parse(JsonStr, json_object, false);
 	string jsonID = json_object["ID"].toStyledString();
-	string jsonobj = json_object["AVP_LIST"].toStyledString();
-	string sqlInsert = "insert into  node values(" + jsonID + ",\'" + jsonobj + "\');";
+	string sqlInsert = "insert into  node values(" + jsonID + ",\'" + JsonStr + "\');";
 	sqlite3_exec(pdb, sqlInsert.c_str(), 0, 0, &errMsg);
 	if (errMsg)
 	{
