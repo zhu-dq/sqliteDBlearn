@@ -1,7 +1,11 @@
+#ifndef  _EVENTRELATIONMANAGEMENT_H
+#define	 _EVENTRELATIONMANAGEMENT_H 
+
+
 #if defined(_WIN32)
-#include <WinSock2.h>
-#include  <Windows.h>
-#endif
+	#include <WinSock2.h>
+	#include  <Windows.h>
+	#endif
 #include <iostream>
 #include<list>
 #include <string>
@@ -28,3 +32,4 @@ public:
 	virtual ~EventRelationManagement();
 };
 
+#endif // !_EVENTRELATIONMANAGEMENT_H

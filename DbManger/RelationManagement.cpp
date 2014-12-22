@@ -23,8 +23,8 @@ int RelationManagement::callbackGetRelatedJsonID(void *para, int n_column, char 
 int RelationManagement::callbackGetRelationCount(void *para, int n_column, char **column_value, char **column_name)
 {
 	int *count1 = (int *)para;
-	count1[0] = atoi(column_value[0]);
-	return 0;
+	*count1= atoi(column_value[0]);
+	return 0; 
 }
 int RelationManagement::callbackGetRelation(void *para, int n_column, char **column_value, char **column_name)
 {
@@ -78,7 +78,7 @@ bool RelationManagement::SetRelation(string strID1, string strID2, vector<string
 	//--------------------------------------------------------------------------------------------------------------------------
 	if (count!=0)
 	{
-		cout << "已经存在A和B之间的关系，你是否是想执行更新操作" << endl;
+		cout << "已经存在"+strID1+"和"+strID2+"之间的关系，你是否是想执行更新操作" << endl;
 		return  false;		
 	}
 	string str10;//strc转成string之后的值

@@ -1,7 +1,11 @@
-#if defined(_WIN32)
-#include <WinSock2.h>
-#include  <Windows.h>
-#endif
+#ifndef _OBJMANAGEMENT_H
+#define	 _OBJMANAGEMENT_H
+
+
+	#if defined(_WIN32)
+	#include <WinSock2.h>
+	#include  <Windows.h>
+	#endif
 #include <iostream>
 #include<list>
 #include <string>
@@ -28,3 +32,4 @@ public:
 	virtual ~ObjManagement();
 };
 
+#endif // !_OBJMANAGEMENT_H

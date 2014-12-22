@@ -1,7 +1,9 @@
-#if defined(_WIN32)
-#include <WinSock2.h>
-#include  <Windows.h>
-#endif
+#ifndef		_DATABASEMANAGEMENT_H
+#define    _DATABASEMANAGEMENT_H
+	#if defined(_WIN32)
+	#include <WinSock2.h>
+	#include  <Windows.h>
+	#endif
 #include <iostream>
 #include<list>
 #include <string>
@@ -20,4 +22,5 @@ public:
 	bool CloseDb();//¹Ø±ÕÊý¾Ý¿â
 	virtual ~DataBaseManagement();
 };
+#endif
 
