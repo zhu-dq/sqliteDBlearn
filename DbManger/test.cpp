@@ -2,11 +2,11 @@
 #include <WinSock2.h>
 #include  <Windows.h>
 #endif
-#include <iostream>
-#include<list>
+//#include <iostream>
+//#include<list>
 #include <string>
 #include <vector>
-#include "sqlite3.h"
+//#include "sqlite3.h"
 #include "json\json.h"
 #include "DataBaseManagement.h"
 #include "EventRelationManagement.h"
@@ -82,7 +82,7 @@ vector<string> GetWordFromLine1(string	str, string * ID1, string * ID2)
 	return subv1(v1,v2);
 }
 //自定义分解字符串
-vector<string> GetWordFromLine(string	str, string * ID1, string * ID2)
+inline vector<string> GetWordFromLine(string	&str, string * ID1, string * ID2)
 {
 	istringstream stream(str);
 	string word;
@@ -152,10 +152,11 @@ int main()
 		rmg->SetRelation(ID1, ID2, feature);
 	}
 	time(&end);
-	delete(rmg);
-	delete(dbm);
+
 	cost = difftime(end,start);
 	cout << "耗时："<<cost;
+	delete rmg;
+	delete dbm;
 	getchar();
 	/*ReadDataLineAndWord();
 	getchar();*/

@@ -1,8 +1,13 @@
 #include "RelationManagement.h"
 
-
+static int sql_count = 0;
+static vector<string> v_sql;
 RelationManagement::RelationManagement()
 {
+	if (v_sql.size()>0)
+	{
+		ClearRMCache();
+	}
 }
 int RelationManagement::callbackGetRelatedJsonID(void *para, int n_column, char **column_value, char **column_name)
 {
@@ -32,7 +37,6 @@ int RelationManagement::callbackGetRelation(void *para, int n_column, char **col
 	*strRelation = column_value[0];
 	return 0;
 }
-//str要分割的字符串，pattern指分割字符，如（“，”、“*”）
 vector<string> RelationManagement::split_str(string str, string pattern)
 {
 
@@ -53,8 +57,15 @@ vector<string> RelationManagement::split_str(string str, string pattern)
 	}
 	return result;
 }
-//vector相减,V1-V2  ,注意 V1包含V2，顺序不能反。
-vector<string> RelationManagement::subvector(vector<string> v1, vector<string> v2)
+vector<string>& RelationManagement::addvector(vector<string> &v1, vector<string> &v2)
+{
+	for (vector<string>::iterator i = v2.begin(); i != v2.end(); i++)
+	{
+		v1.push_back(*i);
+	}
+	return v1;
+}
+vector<string> RelationManagement::subvector(vector<string> &v1, vector<string> &v2)
 {
 	for (vector<string>::iterator i = v2.begin(); i != v2.end(); i++)
 	{
@@ -70,17 +81,17 @@ vector<string> RelationManagement::subvector(vector<string> v1, vector<string> v
 	}
 	return v1;
 }
+void   RelationManagement::ClearRMCache()
+{
+	sqlite3_exec(pdb, "BEGIN;", 0, 0, &errMsg);
+	for (vector<string>::iterator i = v_sql.begin(); i != v_sql.end(); i++)
+		sqlite3_exec(pdb, (*i).c_str(), 0, 0, &errMsg);
+	sqlite3_exec(pdb, "COMMIT;", 0, 0, &errMsg);
+	sql_count = 0;
+	v_sql.clear();
+}
 bool RelationManagement::SetRelation(string strID1, string strID2, vector<string> strc)
-{	//--------------------------------------------获取A和B之间数据个数------------------------------------------------------
-	int count = 0;
-	string sqlGetCount = "  select count(*) from noderelation where (IDA = \'" + strID2 + "\' and IDB =\'" + strID1 + "\') or (IDA = \'" + strID1 + "\' and IDB =\'" + strID2 + "\')";
-	sqlite3_exec(pdb, sqlGetCount.c_str(), callbackGetRelationCount, &count, &errMsg);
-	//--------------------------------------------------------------------------------------------------------------------------
-	if (count!=0)
-	{
-		cout << "已经存在"+strID1+"和"+strID2+"之间的关系，你是否是想执行更新操作" << endl;
-		return  false;		
-	}
+{	
 	string str10;//strc转成string之后的值
 	bool	flag = true;
 	//把strc变成一个字符串str10
@@ -90,7 +101,25 @@ bool RelationManagement::SetRelation(string strID1, string strID2, vector<string
 	}
 	str10 = str10.substr(0, str10.length() - 2);//去掉最后一个逗号
 	string sqlInsert = "insert into noderelation values(\""+strID1+"\",\""+strID2+"\",\""+str10+"\")";
-	sqlite3_exec(pdb, sqlInsert.c_str(), 0, 0, &errMsg);
+	if (strID1>strID2)
+	{
+		sqlInsert = "insert into noderelation values(\"" + strID2 + "\",\"" + strID1 + "\",\"" + str10 + "\")";
+	}
+	if (sql_count<10000)
+	{
+		v_sql.push_back(sqlInsert);
+		sql_count++;
+		return flag;
+	}
+	else
+	{
+		sqlite3_exec(pdb, "BEGIN;", 0, 0, &errMsg);
+		for (vector<string>::iterator i = v_sql.begin(); i != v_sql.end();i++)
+			sqlite3_exec(pdb, (*i).c_str(), 0, 0, &errMsg);
+		sqlite3_exec(pdb, "COMMIT;", 0, 0, &errMsg);
+		sql_count = 0;
+		v_sql.clear();
+	}
 	if (errMsg)
 	{
 		cout << "RelationManagement: \t sqlInsert:\t" << errMsg << endl;
@@ -101,6 +130,10 @@ bool RelationManagement::SetRelation(string strID1, string strID2, vector<string
 }
 vector<string> RelationManagement::GetRelation(string strID1, string strID2)
 {
+	if (v_sql.size()>0)
+	{
+		ClearRMCache();
+	}
 	vector<string> text;
 	string strRelation;
 	string sqlSelect;
@@ -114,9 +147,12 @@ vector<string> RelationManagement::GetRelation(string strID1, string strID2)
 	text = split_str(strRelation,",");
 	return text;
 }
-//--------更新是用新的vector<string> strc 替换原来的 vector<string> strc  。
 bool RelationManagement::UpdateRelation(string strID1, string strID2, vector<string> strc)
 {
+	if (v_sql.size()>0)
+	{
+		ClearRMCache();
+	}
 	string str10;//strc转成string之后的值
 	bool	flag = true;
 	//把strc变成一个字符串str10
@@ -137,13 +173,32 @@ bool RelationManagement::UpdateRelation(string strID1, string strID2, vector<str
 }
 bool	RelationManagement::DeleteRelation(string strID1, string strID2, vector<string> strc)
 {
+	if (v_sql.size()>0)
+	{
+		ClearRMCache();
+	}
 	vector<string> v1 = RelationManagement::GetRelation(strID1, strID2);
 	vector<string> substrc = RelationManagement:: subvector(v1, strc);
 	RelationManagement::UpdateRelation(strID1, strID2, substrc);
 	return true;
 }
+bool RelationManagement::AppendRelation(string strID1, string strID2, vector<string> strc)
+{
+	if (v_sql.size()>0)
+	{
+		ClearRMCache();
+	}
+	vector<string> v1 = RelationManagement::GetRelation(strID1, strID2);
+	vector<string> substrc = RelationManagement::addvector(v1, strc);
+	RelationManagement::UpdateRelation(strID1, strID2, substrc);
+	return true;
+}
 vector<string> RelationManagement::GetRelatedJsonID(string StrID)
 {
+	if (v_sql.size()>0)
+	{
+		ClearRMCache();
+	}
 	vector<string> text;
 	vector<string> strRelate;
 	string strRelation;
@@ -162,4 +217,8 @@ vector<string> RelationManagement::GetRelatedJsonID(string StrID)
 }
 RelationManagement::~RelationManagement()
 {
+	if (v_sql.size()>0)
+	{
+		ClearRMCache();
+	}
 }
