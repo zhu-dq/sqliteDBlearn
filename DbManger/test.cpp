@@ -135,35 +135,42 @@ void ReadDataLineAndWord()
 }
 int main()
 {
-	DataBaseManagement * dbm = new DataBaseManagement();
-	RelationManagement * rmg = new RelationManagement();
-	string	ID1;
-	string	ID2;
-	string   str;
-	vector<string>  feature;
-	time_t start, end;
-	double cost;
-	time(&start);
-	ifstream fin("relation.txt");
-	while (getline(fin,str))
-	{
-		feature = GetWordFromLine(str, &ID1, &ID2);
-		//cout << ID1 << "\t"<<ID2 << endl;
-		rmg->SetRelation(ID1, ID2, feature);
-	}
-	time(&end);
+	//--------------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------------
+	//DataBaseManagement * dbm = new DataBaseManagement();
+	//RelationManagement * rmg = new RelationManagement();
+	//string	ID1;
+	//string	ID2;
+	//string   str;
+	//vector<string>  feature;
+	//time_t start, end;
+	//double cost;
+	//time(&start);
+	//ifstream fin("relation.txt");
+	//while (getline(fin,str))
+	//{
+	//	feature = GetWordFromLine(str, &ID1, &ID2);
+	//	//cout << ID1 << "\t"<<ID2 << endl;
+	//	rmg->SetRelation(ID1, ID2, feature);
+	//}
+	//time(&end);
 
-	cost = difftime(end,start);
-	cout << "耗时："<<cost;
-	delete rmg;
-	delete dbm;
-	getchar();
+	//cost = difftime(end,start);
+	//cout << "耗时："<<cost;
+	//delete rmg;
+	//delete dbm;
+	//getchar();
+	//---------------------------------------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------------------------------------
 	/*ReadDataLineAndWord();
 	getchar();*/
 	//ReadDataFromFileLBLIntoString(); //逐词读入字符串
 	//-----------------------------------------------------------------------------------------------------
+	//time_t start, end;
+	//time(&start);
 	//ifstream fin("data.txt");
 	//string str_json;
+	//DataBaseManagement * dbm = new DataBaseManagement();
 	//ObjManagement  *omg = new ObjManagement();
 	//while (getline(fin,str_json))
 	//{
@@ -172,7 +179,16 @@ int main()
 	//string	strjson2 = omg->GetJson("6855052");              //获取
 	//cout << "strjson2" << endl;
 	//cout << strjson2 << endl;
-	//delete(omg);
+
+	//cout <<"\n 总数：\t"<< omg->GetNodeCount() << endl;
+	////290694
+	//omg->insertAttributeToNode("290694","person","zhudanqi");
+	//cout<<omg->GetJson("290694")<<endl;
+	//delete dbm;
+	//delete omg;
+	//time(&end);
+	//double cost = difftime(end, start);
+	//cout << "耗时：\t" << cost << endl;
 	//getchar();
 	//return 0;
 //---------------------------------------------------------------------------------------------------------------------
@@ -193,17 +209,18 @@ int main()
 	//ObjManagement  *omg = new ObjManagement();
 	//omg->AddJson(json_object.toStyledString());           //添加
 	//string	strjson1=omg->GetJson("6851999");              //获取
-	//cout << "strjson1" << endl;
+	//cout << "添加后获取strjson1" << endl;
 	//cout << strjson1 << endl;
-	//omg->UpdateJson("6851999", json_object.toStyledString());//更新
+	//omg->UpdateJson("6851999", "hello");//更新
 	//string	strjson2 = omg->GetJson("6851999");              //获取
-	//cout << "strjson2" << endl;
+	//cout << "更新后获取strjson2" << endl;
 	//cout << strjson2 << endl;
 	//omg->DeleteJson("6851999");//删除操作
 	//string	strjson3 = omg->GetJson("6851999");              //获取
-	//cout << "strjson3" << endl;
+	//cout << "删除后获取strjson3" << endl;
 	//cout << strjson3 << endl;
-	//delete(omg);
+	//delete omg;
+	//getchar();
 
 	////------------------------------------------------------test         RelationManagement
 	//RelationManagement *rmg = new RelationManagement();
@@ -233,13 +250,15 @@ int main()
 	//	cout << *i<<endl;
 	//}
 	//delete(rmg);
-	////-------------------------------------test EventRelationManagement
-	//EventRelationManagement  * erm = new EventRelationManagement();
-	//erm->AddEventRelation("101","202",1);//添加事件之间的关联关系
-	//bool b1 = erm->GetEventRelation("101","202");//查找事件之间的关联关系
-	//erm->UpdateEventRelation("101","202",1);//更新事件之间的关联关系
-	//erm->DeleteEventRelation("101","202");//删除事件之间的关联关系
-	//delete(erm);
-	//delete(dbm);
-	//getchar();
+	//-------------------------------------test EventRelationManagement
+	DataBaseManagement * dbm = new DataBaseManagement();
+	EventRelationManagement  * erm = new EventRelationManagement();
+	erm->AddEventRelation("101","202",1);//添加事件之间的关联关系
+	cout<<"有没有关系："<<erm->GetEventRelation("101","202");//查找事件之间的关联关系
+	erm->UpdateEventRelation("101","202",0);//更新事件之间的关联关系
+	cout << "有没有关系：" << erm->GetEventRelation("101", "202");//查找事件之间的关联关系
+	erm->DeleteEventRelation("101","202");//删除事件之间的关联关系
+	delete erm;
+	delete dbm;
+	getchar();
 }

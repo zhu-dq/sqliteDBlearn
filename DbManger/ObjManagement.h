@@ -39,6 +39,16 @@ public:
 	*/
 	static int callbackselect(void *para, int n_column, char **column_value, char **column_name);
 	/*
+	函数名：callbackNodeCount（）
+	功能：GetNodeCount()的回调函数，获取目标ID。
+	参数：para,long类型的指针，存取node总数（自定义）
+			  n_column,执行sql获取的行数（系统自动返回）
+			 column_name，一行sql结果中的列名，是个数组（系统自动返回）
+			 column_value，与列名对应的数值，是个数组（系统自动返回）
+	返回值：固定ruturn 0.
+	*/
+	static int callbackNodeCount(void *para, int n_column, char **column_value, char **column_name);
+	/*
 	函数：AddJson（）
 	功能：添加目标的信息
 	参数：JsonStr，一条json数据的字符串。
@@ -74,6 +84,22 @@ public:
 	返回值：无
 	*/
 	void ClearOMGCache();
+	/*
+		函数：GetNodeCount()
+		功能：获取node节点总数
+		参数：无
+		返回值：long类型的node节点总数
+	*/
+	long GetNodeCount();
+	/*
+		函数名：insertAttributeToNode（）
+		功能：向目标node节点增加属性
+		参数：ID:目标ID
+				  key:属性对应json中的关键字
+				  value：属性对应json中的值
+		返回值：bool，ture表示增加成功。
+	*/
+	bool insertAttributeToNode(string ID, string key, string value);
 	virtual ~ObjManagement();
 };
 

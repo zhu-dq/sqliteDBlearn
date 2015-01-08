@@ -29,7 +29,6 @@ void  EventRelationManagement::ClearERMCache()
 	sqlite3_exec(pdb, "COMMIT;", 0, 0, &errMsg);
 	count_ERM = 0;
 	v_ERM.clear();
-	cout << "Çå¿ÕÁË»º´æÇø" << endl;
 }
 bool	EventRelationManagement::AddEventRelation(string strE1, string strE2, bool b)
 {
